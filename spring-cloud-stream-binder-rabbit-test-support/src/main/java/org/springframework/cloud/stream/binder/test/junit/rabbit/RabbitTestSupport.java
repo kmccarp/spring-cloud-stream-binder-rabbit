@@ -100,49 +100,23 @@ public class RabbitTestSupport
 			this.serverSocket = ServerSocketFactory.getDefault()
 					.createServerSocket(this.port, 10);
 			LOGGER.info("Proxy started");
-			this.serverExec.execute(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						while (true) {
-							final Socket socket = serverSocket.accept();
-							LOGGER.info("Accepted Connection");
-							socketExec.execute(new Runnable() {
-
-								@Override
-								public void run() {
+			this.serverExec.execute(() -> {
+				try {
+					while (true) {
+						final Socket socket = serverSocket.accept();
+						LOGGER.info("Accepted Connection");
+						socketExec.execute(() -> {
+							try {
+								final Socket rabbitSocket = SocketFactory
+							.getDefault()
+							.createSocket("localhost", 5672);
+								socketExec.execute(() -> {
+									LOGGER.info("Running: " + rabbitSocket.getLocalPort());
 									try {
-										final Socket rabbitSocket = SocketFactory
-												.getDefault()
-												.createSocket("localhost", 5672);
-										socketExec.execute(new Runnable() {
-
-											@Override
-											public void run() {
-												LOGGER.info("Running: " + rabbitSocket.getLocalPort());
-												try {
-													InputStream is = rabbitSocket
-															.getInputStream();
-													OutputStream os = socket
-															.getOutputStream();
-													int c;
-													while ((c = is.read()) >= 0) {
-														os.write(c);
-													}
-												}
-												catch (IOException e) {
-													try {
-														socket.close();
-														rabbitSocket.close();
-													}
-													catch (IOException e1) {
-													}
-												}
-											}
-										});
-										InputStream is = socket.getInputStream();
-										OutputStream os = rabbitSocket.getOutputStream();
+										InputStream is = rabbitSocket
+									.getInputStream();
+										OutputStream os = socket
+									.getOutputStream();
 										int c;
 										while ((c = is.read()) >= 0) {
 											os.write(c);
@@ -151,21 +125,34 @@ public class RabbitTestSupport
 									catch (IOException e) {
 										try {
 											socket.close();
+											rabbitSocket.close();
 										}
 										catch (IOException e1) {
 										}
 									}
+								});
+								InputStream is = socket.getInputStream();
+								OutputStream os = rabbitSocket.getOutputStream();
+								int c;
+								while ((c = is.read()) >= 0) {
+									os.write(c);
 								}
-
-							});
-						}
+							}
+							catch (IOException e) {
+								try {
+									socket.close();
+								}
+								catch (IOException e1) {
+								}
+							}
+						});
 					}
-					catch (IOException e) {
-						try {
-							serverSocket.close();
-						}
-						catch (IOException e1) {
-						}
+				}
+				catch (IOException e) {
+					try {
+						serverSocket.close();
+					}
+					catch (IOException e1) {
 					}
 				}
 			});

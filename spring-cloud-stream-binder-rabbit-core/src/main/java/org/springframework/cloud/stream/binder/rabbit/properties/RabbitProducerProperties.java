@@ -26,7 +26,6 @@ import org.springframework.expression.common.LiteralExpression;
 import org.springframework.util.Assert;
 
 
-
 /**
  * @author Marius Bogoevici
  * @author Gary Russell
@@ -99,7 +98,7 @@ public class RabbitProducerProperties extends RabbitCommonProperties {
 	/**
 	 * patterns to match which headers are mapped (inbound).
 	 */
-	private String[] headerPatterns = new String[] { "*" };
+	private String[] headerPatterns = new String[]{"*"};
 
 	/**
 	 * when using a delayed message exchange, a SpEL expression to determine the delay to
@@ -244,9 +243,7 @@ public class RabbitProducerProperties extends RabbitCommonProperties {
 
 	public Expression getRoutingKeyExpression() {
 		return Optional.ofNullable(this.routingKeyExpression)
-				.orElseGet(() -> Optional.ofNullable(this.routingKey)
-						.map(LiteralExpression::new)
-						.orElse(null));
+	.orElseGet(() -> Optional.ofNullable(this.routingKey).map(LiteralExpression::new).orElse(null));
 	}
 
 	public void setRoutingKeyExpression(Expression routingKeyExpression) {

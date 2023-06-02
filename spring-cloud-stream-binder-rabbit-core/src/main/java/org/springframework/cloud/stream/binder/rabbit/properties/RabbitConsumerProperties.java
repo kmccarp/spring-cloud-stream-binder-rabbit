@@ -76,7 +76,7 @@ public class RabbitConsumerProperties extends RabbitCommonProperties {
 	/**
 	 * patterns to match which headers are mapped (inbound).
 	 */
-	private String[] headerPatterns = new String[] { "*" };
+	private String[] headerPatterns = new String[]{"*"};
 
 	/**
 	 * interval between reconnection attempts.

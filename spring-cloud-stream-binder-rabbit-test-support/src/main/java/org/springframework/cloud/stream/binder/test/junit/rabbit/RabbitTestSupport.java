@@ -41,8 +41,7 @@ import org.springframework.cloud.stream.test.junit.AbstractExternalResourceTestS
  * @author Gary Russell
  * @author Eric Bottard
  */
-public class RabbitTestSupport
-		extends AbstractExternalResourceTestSupport<CachingConnectionFactory> {
+public class RabbitTestSupportextends AbstractExternalResourceTestSupport<CachingConnectionFactory> {
 
 	private final boolean management;
 
@@ -87,7 +86,7 @@ public class RabbitTestSupport
 
 		public RabbitProxy() throws IOException {
 			ServerSocket serverSocket = ServerSocketFactory.getDefault()
-					.createServerSocket(0);
+		.createServerSocket(0);
 			this.port = serverSocket.getLocalPort();
 			serverSocket.close();
 		}
@@ -98,7 +97,7 @@ public class RabbitTestSupport
 
 		public void start() throws IOException {
 			this.serverSocket = ServerSocketFactory.getDefault()
-					.createServerSocket(this.port, 10);
+		.createServerSocket(this.port, 10);
 			LOGGER.info("Proxy started");
 			this.serverExec.execute(new Runnable() {
 
@@ -114,8 +113,8 @@ public class RabbitTestSupport
 								public void run() {
 									try {
 										final Socket rabbitSocket = SocketFactory
-												.getDefault()
-												.createSocket("localhost", 5672);
+									.getDefault()
+									.createSocket("localhost", 5672);
 										socketExec.execute(new Runnable() {
 
 											@Override
@@ -123,9 +122,9 @@ public class RabbitTestSupport
 												LOGGER.info("Running: " + rabbitSocket.getLocalPort());
 												try {
 													InputStream is = rabbitSocket
-															.getInputStream();
+												.getInputStream();
 													OutputStream os = socket
-															.getOutputStream();
+												.getOutputStream();
 													int c;
 													while ((c = is.read()) >= 0) {
 														os.write(c);
